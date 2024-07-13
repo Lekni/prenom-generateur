@@ -31,19 +31,19 @@ prenoms = {
 def segmenter_syllabes(prenom):
     return re.findall(r'[^aeiouy]*[aeiouy]+(?:[^aeiouy]*$|[^aeiouy](?=[^aeiouy]))?', prenom, re.IGNORECASE)
 
-# Fonction pour générer des prénoms
-def generer_prenom(liste_prenoms, nb_syllabes, nb_lettres):
-    syllabes = []
-    for prenom in liste_prenoms:
-        syllabes.extend(segmenter_syllabes(prenom))
-    
-    syllabes = list(set(syllabes))
-    
+# Fonction pour générer des prénoms par permutation des syllabes
+def generer_prenom_par_permutation(liste_prenoms, nb_syllabes, nb_lettres):
     generated_prenoms = []
+    
     while len(generated_prenoms) < 5:
-        prenom = ''.join(random.choices(syllabes, k=nb_syllabes))
-        if len(prenom) <= nb_lettres:
-            generated_prenoms.append(prenom.capitalize())
+        prenom_base = random.choice(liste_prenoms)
+        syllabes = segmenter_syllabes(prenom_base)
+        
+        if len(syllabes) >= nb_syllabes:
+            random.shuffle(syllabes)
+            prenom = ''.join(syllabes[:nb_syllabes])
+            if len(prenom) <= nb_lettres:
+                generated_prenoms.append(prenom.capitalize())
     
     return generated_prenoms
 
@@ -61,7 +61,7 @@ nb_lettres = st.slider("Nombre de lettres", min_value=3, max_value=10, value=6)
 # Bouton pour générer des prénoms
 if st.button("Générer des prénoms"):
     liste_prenoms = prenoms[langue][genre]
-    generated_prenoms = generer_prenom(liste_prenoms, nb_syllabes, nb_lettres)
+    generated_prenoms = generer_prenom_par_permutation(liste_prenoms, nb_syllabes, nb_lettres)
     
     for i in range(0, len(generated_prenoms), 5):
         cols = st.columns(5)
