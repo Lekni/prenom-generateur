@@ -5,24 +5,25 @@ import re
 # Listes de prénoms fictives
 prenoms = {
     "Français": {
-        "Masculin": ["Alexandre", "Benjamin", "Christophe", "David", "Etienne"],
-        "Féminin": ["Alice", "Bernadette", "Charlotte", "Diane", "Elise"]
+        "Masculin": ["Alexandre", "Benjamin", "Charles", "David", "Émile", "François", "Gabriel", "Henri", "Isaac", "Jacques", "Laurent", "Martin", "Nicolas", "Olivier", "Paul", "Quentin", "Romain", "Simon", "Thomas", "Ulysse", "Vincent", "William", "Xavier", "Yves", "Zacharie"]
+,
+        "Féminin": ["Amandine", "Bérénice", "Charlotte", "Delphine", "Émilie", "Florence", "Gabrielle", "Hélène", "Isabelle", "Julie", "Karine", "Laure", "Marie", "Nathalie", "Olivia", "Pauline", "Quitterie", "Rachel", "Sophie", "Thérèse", "Ursule", "Valérie", "Wendy", "Xénia", "Yvette", "Zoé"]
     },
     "Allemand": {
-        "Masculin": ["Friedrich", "Heinrich", "Klaus", "Wolfgang", "Hans"],
-        "Féminin": ["Greta", "Heidi", "Lotte", "Ursula", "Ingrid"]
+        "Masculin": ["Alexander", "Benjamin", "Carl", "David", "Emil", "Friedrich", "Georg", "Heinrich", "Isaak", "Jakob", "Ludwig", "Martin", "Niklas", "Otto", "Paul", "Quirin", "Rudolf", "Stefan", "Thomas", "Ulrich", "Viktor", "Werner", "Xaver", "Yannick", "Zacharias"],
+        "Féminin": ["Amanda", "Bettina", "Charlotte", "Doris", "Emma", "Franziska", "Greta", "Hanna", "Isabel", "Julia", "Katharina", "Luise", "Marie", "Nina", "Olga", "Paula", "Quirin", "Rebecca", "Sophie", "Theresa", "Ulrike", "Verena", "Wiebke", "Xenia", "Yvonne", "Zoe"]
     },
     "Anglais": {
-        "Masculin": ["John", "William", "James", "Charles", "George"],
-        "Féminin": ["Mary", "Elizabeth", "Patricia", "Jennifer", "Linda"]
+        "Masculin": ["Alexander", "Benjamin", "Charles", "David", "Emil", "Frank", "George", "Henry", "Isaac", "Jack", "Louis", "Martin", "Nicholas", "Oliver", "Paul", "Quentin", "Robert", "Steven", "Thomas", "Ulysses", "Victor", "William", "Xander", "Yves", "Zachary"],
+        "Féminin": ["Amanda", "Betty", "Charlotte", "Diana", "Emily", "Fiona", "Grace", "Hannah", "Isabelle", "Jessica", "Katherine", "Laura", "Mary", "Nina", "Olivia", "Patricia", "Quinn", "Rachel", "Sophia", "Tina", "Ursula", "Victoria", "Wendy", "Xena", "Yvonne", "Zara"]
     },
     "Espagnol": {
-        "Masculin": ["Juan", "Carlos", "Pedro", "Luis", "Miguel"],
-        "Féminin": ["Maria", "Isabella", "Carmen", "Dolores", "Sofia"]
+        "Masculin": ["Alejandro", "Benjamin", "Carlos", "David", "Emilio", "Francisco", "Gonzalo", "Hugo", "Ignacio", "Javier", "Luis", "Manuel", "Nicolas", "Oscar", "Pablo", "Quentin", "Rafael", "Sergio", "Tomas", "Ulises", "Vicente", "William", "Xavier", "Yago", "Zacarias"],
+        "Féminin":  ["Amanda", "Beatriz", "Carlota", "Diana", "Emilia", "Fernanda", "Gabriela", "Helena", "Isabel", "Juana", "Lucia", "Maria", "Nina", "Olga", "Paula", "Quintina", "Raquel", "Sofia", "Teresa", "Ursula", "Valeria", "Wendy", "Ximena", "Yolanda", "Zoe"]
     },
     "Islandais": {
-        "Masculin": ["Bjorn", "Gunnar", "Magnus", "Olafur", "Thor"],
-        "Féminin": ["Gudrun", "Ingrid", "Sigrid", "Thorunn", "Vigdis"]
+        "Masculin": ["Alexander", "Bjorn", "Carl", "David", "Emil", "Finnur", "Gunnar", "Halldor", "Ingvar", "Jon", "Kristjan", "Leifur", "Magnus", "Njall", "Olafur", "Petur", "Quinn", "Ragnar", "Stefan", "Thor", "Ulfr", "Valdimar", "William", "Xavier", "Ymir", "Zacharias"],
+        "Féminin": ["Amanda", "Björk", "Carla", "Dóra", "Elísa", "Freya", "Gudrun", "Hildur", "Ingibjörg", "Jóna", "Katrin", "Lilja", "Margret", "Nína", "Olga", "Pálína", "Quinn", "Rakel", "Sara", "Tinna", "Urður", "Vigdís", "Wendy", "Xena", "Ylfa", "Zoe"]
     }
 }
 
