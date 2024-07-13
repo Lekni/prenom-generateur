@@ -2,43 +2,47 @@ import streamlit as st
 import random
 import re
 
-# Fonction pour segmenter un prénom en syllabes
-def syllabify(name):
-    syllables = re.findall(r'[^aeiou]*[aeiou]+(?:[^aeiou]*$|[^aeiou](?=[^aeiou]))?', name, re.IGNORECASE)
-    return syllables
+def syllable_segment(name):
+    # Simple syllable segmentation using regex
+    pattern = re.compile(r'[^aeiouy]*[aeiouy]+(?:[^aeiouy]*$|[^aeiouy](?=[^aeiouy]|$))?', re.IGNORECASE)
+    return pattern.findall(name)
 
-# Fonction pour générer des prénoms à partir des syllabes
-def generate_names(syllables, num_syllables, num_names):
+def generate_names(syllables, num_names, num_syllables, num_letters):
     generated_names = []
-    for _ in range(num_names):
-        name = ''.join(random.choices(syllables, k=num_syllables))
-        generated_names.append(name.capitalize())
+    while len(generated_names) < num_names:
+        name = ''
+        while len(name) < num_letters:
+            name += random.choice(syllables)
+            if len(name) >= num_letters or len(name) >= num_syllables * 2:
+                break
+        if len(name) <= num_letters:
+            generated_names.append(name.capitalize())
     return generated_names
 
-# Interface utilisateur avec Streamlit
-st.title("Générateur de Prénoms à partir de Syllabes")
+# Streamlit UI
+st.title('Générateur de Prénoms à partir de Syllabes')
 
-# Champ pour coller une liste de prénoms
-input_names = st.text_area("Collez une liste de prénoms (un par ligne):")
+# Input for list of names
+name_list_input = st.text_area('Collez une liste de prénoms (séparés par des nouvelles lignes):')
+name_list = name_list_input.split('\n')
 
-# Sélection du nombre de syllabes par prénom
-num_syllables = st.slider("Nombre de syllabes par prénom:", min_value=1, max_value=5, value=3)
+# Parameters for generated names
+num_syllables = st.number_input('Nombre de syllabes par prénom', min_value=1, value=2)
+num_letters = st.number_input('Nombre de lettres par prénom', min_value=1, value=6)
+num_names = 20
 
-# Bouton pour générer les prénoms
-if st.button("Générer des prénoms"):
-    if input_names:
-        # Traitement des prénoms collés
-        names_list = input_names.split('\n')
-        all_syllables = []
-        for name in names_list:
-            all_syllables.extend(syllabify(name.strip().lower()))
-        
-        # Générer les prénoms
-        generated_names = generate_names(all_syllables, num_syllables, 20)
-        
-        # Afficher les prénoms générés
-        st.write("Prénoms générés:")
-        for generated_name in generated_names:
-            st.write(generated_name)
-    else:
-        st.warning("Veuillez coller une liste de prénoms.")
+# Process the names to extract syllables
+syllables = []
+for name in name_list:
+    syllables.extend(syllable_segment(name.strip().lower()))
+
+# Generate new names
+if st.button('Générer des prénoms'):
+    new_names = generate_names(syllables, num_names, num_syllables, num_letters)
+    
+    # Display the generated names in columns of 5
+    for i in range(0, len(new_names), 5):
+        cols = st.columns(5)
+        for col, name in zip(cols, new_names[i:i+5]):
+            col.write(name)
+
