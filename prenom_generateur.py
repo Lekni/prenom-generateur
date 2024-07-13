@@ -1,61 +1,67 @@
 import streamlit as st
 import random
-import re
 
-def syllable_segment(name):
-    # Simple syllable segmentation using regex
-    pattern = re.compile(r'[^aeiouy]*[aeiouy]+(?:[^aeiouy]*$|[^aeiouy](?=[^aeiouy]|$))?', re.IGNORECASE)
-    return pattern.findall(name)
+# Prénoms en différentes langues (exemple simplifié)
+prenoms_fr_masc = ["Alexandre", "Benjamin", "Charles", "David", "Émile"]
+prenoms_fr_fem = ["Amandine", "Bérénice", "Charlotte", "Delphine", "Émilie"]
+prenoms_de_masc = ["Alexander", "Benjamin", "Carl", "David", "Emil"]
+prenoms_de_fem = ["Amanda", "Bettina", "Charlotte", "Doris", "Emma"]
+prenoms_en_masc = ["Alexander", "Benjamin", "Charles", "David", "Emil"]
+prenoms_en_fem = ["Amanda", "Betty", "Charlotte", "Diana", "Emily"]
+prenoms_es_masc = ["Alejandro", "Benjamin", "Carlos", "David", "Emilio"]
+prenoms_es_fem = ["Amanda", "Beatriz", "Carlota", "Diana", "Emilia"]
+prenoms_is_masc = ["Alexander", "Bjorn", "Carl", "David", "Emil"]
+prenoms_is_fem = ["Amanda", "Björk", "Carla", "Dóra", "Elísa"]
 
-def generate_names(syllables, num_names, num_syllables, num_letters):
-    generated_names = []
-    while len(generated_names) < num_names:
-        name = ''
-        while len(name) < num_letters:
-            name += random.choice(syllables)
-            if len(name) >= num_letters or len(name) >= num_syllables * 2:
-                break
-        if len(name) <= num_letters:
-            generated_names.append(name.capitalize())
-    return generated_names
+# Fonction pour segmenter les prénoms par syllabes (simplifiée)
+def segmenter_syllabes(prenom):
+    # Exemple très basique pour la segmentation, à améliorer selon besoin
+    syllabes = []
+    voyelles = "aeiouyAEIOUY"
+    syllabe = ""
+    for lettre in prenom:
+        syllabe += lettre
+        if lettre in voyelles:
+            syllabes.append(syllabe)
+            syllabe = ""
+    if syllabe:
+        syllabes.append(syllabe)
+    return syllabes
 
-# Prénoms exemples par origine (en réalité, vous voudrez peut-être utiliser des listes plus complètes)
-name_data = {
-    'Française': ['Alice', 'Charlotte', 'Émilie', 'Julien', 'Laurent'],
-    'Anglaise': ['Oliver', 'Amelia', 'Harry', 'Jessica', 'George'],
-    'Allemande': ['Hans', 'Greta', 'Fritz', 'Heidi', 'Klaus']
+# Regroupement des prénoms par langue et genre
+prenoms = {
+    "Français Masculin": prenoms_fr_masc,
+    "Français Féminin": prenoms_fr_fem,
+    "Allemand Masculin": prenoms_de_masc,
+    "Allemand Féminin": prenoms_de_fem,
+    "Anglais Masculin": prenoms_en_masc,
+    "Anglais Féminin": prenoms_en_fem,
+    "Espagnol Masculin": prenoms_es_masc,
+    "Espagnol Féminin": prenoms_es_fem,
+    "Islandais Masculin": prenoms_is_masc,
+    "Islandais Féminin": prenoms_is_fem,
 }
 
-# Streamlit UI
-st.title('Générateur de Prénoms à partir de Syllabes')
+# Interface Streamlit
+st.title("Générateur de Prénoms")
+langue_genre = st.selectbox("Choisissez la langue et le genre", list(prenoms.keys()))
+nb_syllabes = st.slider("Nombre de syllabes", 1, 5, 2)
+nb_lettres = st.slider("Nombre de lettres", 3, 10, 6)
+nb_prenoms = st.slider("Nombre de prénoms à générer", 5, 50, 10)
 
-# Input for list of names
-name_list_input = st.text_area('Collez une liste de prénoms (séparés par des nouvelles lignes):')
-name_list = name_list_input.split('\n')
+# Segmenter les prénoms de la liste choisie
+prenoms_segmentes = [segmenter_syllabes(p) for p in prenoms[langue_genre]]
 
-# Select origin
-selected_origin = st.selectbox('Sélectionnez l\'origine des prénoms:', list(name_data.keys()))
+# Générer des prénoms selon les critères
+prenoms_generes = []
+while len(prenoms_generes) < nb_prenoms:
+    prenom = random.choice(prenoms[langue_genre])
+    syllabes = segmenter_syllabes(prenom)
+    if len(syllabes) == nb_syllabes and len(prenom) == nb_lettres:
+        prenoms_generes.append(prenom)
 
-# Parameters for generated names
-num_syllables = st.number_input('Nombre de syllabes par prénom', min_value=1, value=2)
-num_letters = st.number_input('Nombre de lettres par prénom', min_value=1, value=6)
-num_names = 20
-
-# Process the names to extract syllables
-syllables = []
-# Add syllables from the selected origin
-for name in name_data[selected_origin]:
-    syllables.extend(syllable_segment(name.strip().lower()))
-# Add syllables from the user input
-for name in name_list:
-    syllables.extend(syllable_segment(name.strip().lower()))
-
-# Generate new names
-if st.button('Générer des prénoms'):
-    new_names = generate_names(syllables, num_names, num_syllables, num_letters)
-    
-    # Display the generated names in columns of 5
-    for i in range(0, len(new_names), 5):
-        cols = st.columns(5)
-        for col, name in zip(cols, new_names[i:i+5]):
-            col.write(name)
+# Afficher les prénoms générés en colonnes de 5
+st.subheader("Prénoms générés")
+cols = st.columns(5)
+for i, prenom in enumerate(prenoms_generes):
+    cols[i % 5].write(prenom)
