@@ -1,24 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
+import streamlit as st
 import random
 
 # Fonction pour segmenter un prénom en syllabes (approximatif)
-def segment_syllables(name):
-    vowels = "aeiouyAEIOUY"
-    syllables = []
-    syllable = ""
+@@ -21,113 +20,46 @@ def segment_syllables(name):
 
-    for i, char in enumerate(name):
-        syllable += char
-        if char in vowels:
-            if i + 1 < len(name) and name[i + 1] in vowels:
-                continue
-            syllables.append(syllable)
-            syllable = ""
-
-    if syllable:
-        syllables.append(syllable)
-    
     return syllables
 
 # Fonction pour changer une syllabe du prénom
@@ -29,7 +16,7 @@ def change_syllable():
     if len(syllables) < 2:
         result_label.config(text="Le prénom doit avoir au moins deux syllabes.")
         return
-    
+
     initial_syllable.set(syllables[0])
     if len(syllables) == 2:
         middle_syllable.set("")
@@ -59,27 +46,32 @@ def change_syllable():
         elif part == "finale":
             new_final = random_name_syllables[-1]
             new_name = ''.join(syllables[:-1]) + new_final
-        
+
         new_names.add(new_name)
 
     result_label.config(text="Prénoms générés :")
     for i, new_name in enumerate(new_names):
         result_labels[i].config(text=new_name)
+# Page principale de l'application
+st.title("Générateur de Prénoms")
 
 # Création de la fenêtre principale
 root = tk.Tk()
 root.title("Générateur de Prénoms")
+name = st.text_input("Entrez un prénom:")
 
 # Champ de saisie pour le prénom
 name_label = ttk.Label(root, text="Entrez un prénom:")
 name_label.pack(pady=5)
 name_entry = ttk.Entry(root)
 name_entry.pack(pady=5)
+part = st.selectbox("Changer la syllabe :", ["initiale", "médiane", "finale"])
 
 # Syllabes du prénom
 initial_syllable = tk.StringVar()
 middle_syllable = tk.StringVar()
 final_syllable = tk.StringVar()
+name_list_text = st.text_area("Collez votre liste de prénoms (un par ligne) :")
 
 syllable_frame = ttk.Frame(root)
 syllable_frame.pack(pady=5)
@@ -113,14 +105,24 @@ name_list_label = ttk.Label(root, text="Collez votre liste de prénoms (un par l
 name_list_label.pack(pady=5)
 name_list_text = tk.Text(root, height=10, width=50)
 name_list_text.pack(pady=5)
+if st.button("Générer"):
+    syllables = segment_syllables(name)
 
 # Bouton pour générer le nouveau prénom
 generate_button = ttk.Button(root, text="Générer", command=change_syllable)
 generate_button.pack(pady=10)
+    if len(syllables) < 2:
+        st.error("Le prénom doit avoir au moins deux syllabes.")
+    else:
+        initial_syllable = syllables[0]
+        middle_syllable = syllables[1] if len(syllables) > 2 else ""
+        final_syllable = syllables[-1]
 
 # Label pour afficher le résultat
 result_label = ttk.Label(root, text="")
 result_label.pack(pady=5)
+        raw_names = name_list_text.strip().split("\n")
+        name_list = [segment_syllables(n.strip()) for n in raw_names]
 
 # Labels pour afficher les prénoms générés
 result_frame = ttk.Frame(root)
@@ -128,6 +130,26 @@ result_frame.pack(pady=5)
 result_labels = [ttk.Label(result_frame, text="") for _ in range(20)]
 for i, label in enumerate(result_labels):
     label.grid(row=i//5, column=i%5, padx=5, pady=2)
+        new_names = set()  # Utiliser un set pour éviter les doublons
+        while len(new_names) < 20:  # Générer 20 prénoms uniques
+            random_name_syllables = random.choice(name_list)
+            if len(random_name_syllables) < 2:
+                continue
 
 # Lancer la boucle principale de l'interface graphique
 root.mainloop()
+            if part == "initiale":
+                new_initial = random_name_syllables[0]
+                new_name = new_initial + ''.join(syllables[1:])
+            elif part == "médiane" and len(syllables) > 2:
+                new_middle = random.choice(random_name_syllables[1:-1] if len(random_name_syllables) > 2 else random_name_syllables)
+                new_name = syllables[0] + new_middle + syllables[-1]
+            elif part == "finale":
+                new_final = random_name_syllables[-1]
+                new_name = ''.join(syllables[:-1]) + new_final
+
+            new_names.add(new_name)
+
+        st.write("Prénoms générés :")
+        for name in new_names:
+            st.write(name)
